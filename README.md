@@ -106,8 +106,8 @@ This layered architecture keeps the code **clean, testable, and scalable**.
 ## 1. Clone the repository
 
 ```
-git clone <your-repository-url>
-cd sqlmodel-postgres-guide
+git clone https://github.com/ltd-ARYAN-pvt/fastapi-sqlmodel-postgresql.git
+cd fastapi-sqlmodel-postgresql
 ```
 
 ---
