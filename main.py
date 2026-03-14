@@ -12,9 +12,10 @@ app = FastAPI(
 app.include_router(user.router)
 app.include_router(order.router)
 
-@app.on_event("startup")
-def on_startup():
-    SQLModel.metadata.create_all(engine)
+#--> Ignore incase of using Migrations with Alembic, as it will handle the database schema creation and updates.
+# @app.on_event("startup")
+# def on_startup():
+#     SQLModel.metadata.create_all(engine)
 
 @app.get("/ping")
 def ping():
