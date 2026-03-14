@@ -1,11 +1,11 @@
-# SQLModel + PostgreSQL Backend Guide
-**Author-Aryan Pandey**
+# FastAPI + SQLModel + PostgreSQL Backend Guide
+**Author — Aryan Pandey**
 
-A practical backend guide demonstrating how to build production-ready APIs using **FastAPI**, **SQLModel**, and **PostgreSQL**.
+A practical backend guide demonstrating how to build **production-ready APIs** using **FastAPI**, **SQLModel**, and **PostgreSQL** with **Alembic migrations**.
 
 This repository is designed for developers who want to understand how modern Python backends interact with relational databases using clean architecture and ORM concepts.
 
-It starts with basic CRUD operations and gradually introduces intermediate and advanced backend concepts such as:
+It begins with basic CRUD operations and gradually introduces intermediate and advanced backend concepts such as:
 
 * ORM object lifecycle
 * Database relationships
@@ -22,7 +22,7 @@ The goal is to provide a **hands-on reference project** that developers can stud
 
 The backend is built using the following technologies:
 
-* FastAPI — modern high-performance API framework
+* FastAPI — high-performance modern API framework
 * SQLModel — ORM built on SQLAlchemy and Pydantic
 * PostgreSQL — relational database
 * SQLAlchemy — database toolkit used internally by SQLModel
@@ -57,20 +57,26 @@ project/
 │   ├── users.py           # API endpoints
 │   └── orders.py
 │
+├── migrations/            # Alembic database migrations
+│   ├── versions/
+│   └── env.py
+│
 ├── docs/                  # detailed learning documentation
 │
 ├── main.py                # FastAPI application entrypoint
 │
+├── alembic.ini
 ├── requirements.txt
 └── README.md
 ```
 
 This structure separates responsibilities clearly:
 
-* **Models** → database schema
-* **Schemas** → API input/output validation
-* **CRUD layer** → database operations
-* **Routes** → API endpoints
+**Models →** database schema
+**Schemas →** API validation
+**CRUD →** database logic
+**Routes →** API endpoints
+**Migrations →** database schema history
 
 ---
 
@@ -116,10 +122,17 @@ cd fastapi-sqlmodel-postgresql
 
 ```
 python -m venv venv
+```
+
+Activate it:
+
+Linux / Mac
+
+```
 source venv/bin/activate
 ```
 
-Windows:
+Windows
 
 ```
 venv\Scripts\Activate.ps1
@@ -151,7 +164,41 @@ POSTGRES_DB=sqlmodel_demo
 
 ---
 
-## 5. Run the application
+## 5. Create PostgreSQL Database
+
+Alembic manages **schema**, but the database must exist first.
+
+Create the database manually:
+
+```
+createdb sqlmodel_demo
+```
+
+Or inside PostgreSQL:
+
+```
+CREATE DATABASE sqlmodel_demo;
+```
+
+---
+
+## 6. Run Database Migrations
+
+Apply migrations to create tables:
+
+```
+alembic upgrade head
+```
+
+This will create:
+
+* `users` table
+* `orders` table
+* `alembic_version` table
+
+---
+
+## 7. Start the Application
 
 ```
 fastapi dev main.py
@@ -169,25 +216,25 @@ http://127.0.0.1:8000
 
 FastAPI automatically generates interactive API documentation.
 
-Swagger UI:
+Swagger UI
 
 ```
 http://127.0.0.1:8000/docs
 ```
 
-ReDoc:
+ReDoc
 
 ```
 http://127.0.0.1:8000/redoc
 ```
 
-You can test all API endpoints directly from the browser.
+You can test API endpoints directly from the browser.
 
 ---
 
 # Example API Endpoints
 
-Users:
+Users
 
 ```
 POST   /users
@@ -197,7 +244,7 @@ PUT    /users/{id}
 DELETE /users/{id}
 ```
 
-Orders:
+Orders
 
 ```
 POST   /orders
@@ -205,11 +252,34 @@ GET    /orders
 GET    /orders/{id}
 ```
 
-Pagination example:
+Pagination example
 
 ```
 GET /users?offset=0&limit=10
 ```
+
+---
+
+# Database Migrations Workflow
+
+This project uses **Alembic** to manage database schema changes.
+
+Typical development workflow:
+
+1️⃣ Modify SQLModel models
+2️⃣ Generate migration
+
+```
+alembic revision --autogenerate -m "message"
+```
+
+3️⃣ Apply migration
+
+```
+alembic upgrade head
+```
+
+This ensures database schema stays synchronized across environments.
 
 ---
 
@@ -245,13 +315,13 @@ These documents make the repository a **mini backend learning guide**.
 
 # Example Request
 
-Create a user:
+Create a user
 
 ```
 POST /users
 ```
 
-Request body:
+Request body
 
 ```
 {
@@ -261,7 +331,7 @@ Request body:
 }
 ```
 
-Response:
+Response
 
 ```
 {
